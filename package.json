@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@bugsnag/js": "^8.4.0",
+    "@bugsnag/plugin-express": "^8.4.0",
+    "express": "^5.1.0"
+  }
+}
