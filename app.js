@@ -1,25 +1,33 @@
-const express = require('express');
-const Bugsnag = require('@bugsnag/js');
-const BugsnagPluginExpress = require('@bugsnag/plugin-express');
+const express = require("express");
+const Bugsnag = require("@bugsnag/js");
+const BugsnagPluginExpress = require("@bugsnag/plugin-express");
 
 Bugsnag.start({
-  apiKey: 'YOUR_BUGSNAG_API_KEY',  // Replace with your actual key
-  plugins: [BugsnagPluginExpress]
+  apiKey: "bdcb9a6b28dee1e1bd29fcc0ed09cdb2",
+  plugins: [BugsnagPluginExpress],
 });
 
+const bugsnagMiddleware = Bugsnag.getPlugin("express");
 const app = express();
-const middleware = Bugsnag.getPlugin('express');
 
-app.use(middleware.requestHandler);
+// Bugsnag middleware
+app.use(bugsnagMiddleware.requestHandler);
 
-app.get('/', (req, res) => {
-  res.send('Hello from DevOps App!');
+// Routes
+app.get("/", (req, res) => {
+  res.send("Hello from DevOps App");
 });
 
-app.get('/error', (req, res) => {
-  throw new Error('Test error for Bugsnag!');
+// Error route for testing
+app.get("/error", (req, res, next) => {
+  next(new Error("Test error for Bugsnag"));
 });
 
-app.use(middleware.errorHandler);
+// Bugsnag error handler
+app.use(bugsnagMiddleware.errorHandler);
 
-app.listen(3000, () => console.log('Server started on port 3000'));
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`App running on port ${PORT}`);
+});
